@@ -13,7 +13,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-snapshotting_rs = "0.1.0"
+Snapshotting_rs = { git = "https://github.com/Teach2Breach/Snapshotting_rs" }
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ snapshotting_rs = "0.1.0"
 ### As a Command Line Tool
 
 ```bash
-snapshotting-rs.exe <PID>
+Snapshotting-rs.exe <PID>
 ```
 
 Where `<PID>` is the process ID of the target process you want to snapshot.
