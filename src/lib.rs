@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use winapi::um::processthreadsapi::{OpenProcess, GetProcessId};
+use winapi::um::processthreadsapi::GetProcessId;
 use winapi::um::processsnapshot::{
     PssCaptureSnapshot, PssFreeSnapshot, PSS_CAPTURE_FLAGS, PSS_CAPTURE_HANDLES, HPSS,
     PSS_CAPTURE_VA_CLONE, PSS_CAPTURE_HANDLE_NAME_INFORMATION, PSS_CAPTURE_HANDLE_BASIC_INFORMATION,
@@ -8,7 +8,7 @@ use winapi::um::processsnapshot::{
     PSS_CAPTURE_THREAD_CONTEXT, PSS_CAPTURE_THREAD_CONTEXT_EXTENDED, PSS_CREATE_BREAKAWAY,
     PSS_CREATE_BREAKAWAY_OPTIONAL, PSS_CREATE_USE_VM_ALLOCATIONS, PSS_CREATE_RELEASE_SECTION,
 };
-use winapi::um::winnt::{CONTEXT_ALL, HANDLE, PROCESS_ALL_ACCESS};
+use winapi::um::winnt::{CONTEXT_ALL, HANDLE};
 
 #[derive(Debug)]
 pub struct ProcessSnapshot {
@@ -17,8 +17,7 @@ pub struct ProcessSnapshot {
 }
 
 impl ProcessSnapshot {
-    pub fn new(pid: u32) -> Result<Self, i32> {
-        let process_handle = unsafe { OpenProcess(PROCESS_ALL_ACCESS, 0, pid) };
+    pub fn new(process_handle: HANDLE) -> Result<Self, i32> {
         if process_handle.is_null() {
             return Err(unsafe { winapi::um::errhandlingapi::GetLastError() as i32 });
         }
@@ -43,7 +42,6 @@ impl ProcessSnapshot {
         };
 
         if result != 0 {
-            unsafe { winapi::um::handleapi::CloseHandle(process_handle) };
             return Err(result as i32);
         }
 
@@ -67,7 +65,6 @@ impl Drop for ProcessSnapshot {
     fn drop(&mut self) {
         unsafe {
             PssFreeSnapshot(self.process_handle, self.snapshot_handle);
-            winapi::um::handleapi::CloseHandle(self.process_handle);
         }
     }
 }

@@ -1,4 +1,6 @@
 use Snapshotting_rs::ProcessSnapshot;
+use winapi::um::processthreadsapi::OpenProcess;
+use winapi::um::winnt::{HANDLE, PROCESS_ALL_ACCESS};
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -13,7 +15,12 @@ fn main() {
 
     println!("Attempting to capture snapshot for PID: {}", pid);
     
-    match capture_process_snapshot(pid) {
+    // Open process handle with OpenProcess
+    let process_handle = unsafe {
+        OpenProcess(PROCESS_ALL_ACCESS, false.into(), pid)
+    };
+    
+    match capture_process_snapshot(process_handle) {
         Ok(_) => println!("Main function ending - snapshot should be freed here"),
         Err(e) => {
             eprintln!("Error: {}", e);
@@ -41,9 +48,9 @@ fn parse_arguments(args: &[String]) -> Result<u32, String> {
     Ok(pid)
 }
 
-fn capture_process_snapshot(pid: u32) -> Result<(), String> {
-    println!("Capturing process with PID {}...", pid);
-    match ProcessSnapshot::new(pid) {
+fn capture_process_snapshot(handle: HANDLE) -> Result<(), String> {
+    println!("Capturing process...");
+    match ProcessSnapshot::new(handle) {
         Ok(snap) => {
             println!("Process snapshot completed successfully");
             println!("Snapshot handle: {:?}", snap);
