@@ -9,6 +9,8 @@ use winapi::um::processsnapshot::{
     PSS_CREATE_BREAKAWAY_OPTIONAL, PSS_CREATE_USE_VM_ALLOCATIONS, PSS_CREATE_RELEASE_SECTION,
 };
 use winapi::um::winnt::{CONTEXT_ALL, HANDLE};
+use winapi::um::processsnapshot::PSS_CAPTURE_VA_SPACE;
+use winapi::um::processsnapshot::PSS_CAPTURE_VA_SPACE_SECTION_INFORMATION;
 
 #[derive(Debug)]
 pub struct ProcessSnapshot {
