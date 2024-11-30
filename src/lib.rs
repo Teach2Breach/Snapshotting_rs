@@ -22,19 +22,7 @@ impl ProcessSnapshot {
             return Err(unsafe { winapi::um::errhandlingapi::GetLastError() as i32 });
         }
 
-        let flags: PSS_CAPTURE_FLAGS = PSS_CAPTURE_VA_CLONE 
-            | PSS_CAPTURE_HANDLES 
-            | PSS_CAPTURE_HANDLE_NAME_INFORMATION 
-            | PSS_CAPTURE_HANDLE_BASIC_INFORMATION 
-            | PSS_CAPTURE_HANDLE_TYPE_SPECIFIC_INFORMATION 
-            | PSS_CAPTURE_HANDLE_TRACE 
-            | PSS_CAPTURE_THREADS 
-            | PSS_CAPTURE_THREAD_CONTEXT 
-            | PSS_CAPTURE_THREAD_CONTEXT_EXTENDED 
-            | PSS_CREATE_BREAKAWAY 
-            | PSS_CREATE_BREAKAWAY_OPTIONAL 
-            | PSS_CREATE_USE_VM_ALLOCATIONS 
-            | PSS_CREATE_RELEASE_SECTION;
+    let flags: PSS_CAPTURE_FLAGS = PSS_CAPTURE_VA_CLONE | PSS_CAPTURE_VA_SPACE | PSS_CAPTURE_VA_SPACE_SECTION_INFORMATION;
 
         let mut snapshot_handle: HPSS = std::ptr::null_mut();
         let result = unsafe { 
