@@ -12,8 +12,8 @@ use winapi::um::winnt::{CONTEXT_ALL, HANDLE};
 
 #[derive(Debug)]
 pub struct ProcessSnapshot {
-    process_handle: winapi::shared::ntdef::HANDLE,
-    snapshot_handle: HPSS,
+    pub process_handle: winapi::shared::ntdef::HANDLE,
+    pub snapshot_handle: HPSS,
 }
 
 impl ProcessSnapshot {
